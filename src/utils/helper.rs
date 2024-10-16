@@ -3,7 +3,8 @@ use serde_json::Value;
 use std::error::Error;
 
 pub async fn get_query(query: &str) -> String {
-    urlencoding::encode(query).to_string()
+    let title = query.to_string().remove(0).to_uppercase().to_string() + &query.to_string()[1..];
+    urlencoding::encode(&title).to_string()
 }
 
 pub async fn get_response(url: &str) -> Result<Value, Box<dyn Error>> {

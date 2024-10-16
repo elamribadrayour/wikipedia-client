@@ -9,14 +9,16 @@ pub async fn get_views(
     start_date: &str,
     nb_days: i64,
 ) -> Result<HashMap<NaiveDate, i64>, Box<dyn Error>> {
-    let dt_start = NaiveDate::parse_from_str(start_date, "%Y%m%d").unwrap();
-    let dt_end = dt_start + Duration::days(nb_days - 1);
-    let end_date = dt_end.format("%Y%m%d").to_string();
+    let dt_start = NaiveDate::parse_from_str(start_date, "%Y%m%d")
+        .expect("start_date argument should be in format YYYYMMDD");
+    let end_date = (dt_start + Duration::days(nb_days - 1))
+        .format("%Y%m%d")
+        .to_string();
 
     let url = format!("https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/{}/daily/{}/{}",
         get_query(query).await,
-        start_date,
-        end_date
+        start_date.to_string() + "00",
+        end_date.to_string() + "00"
     );
     let response = get_response(&url).await?;
     let items = response.get("items").unwrap().as_array().unwrap();
