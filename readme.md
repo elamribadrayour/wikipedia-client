@@ -13,16 +13,18 @@ This library provides a multithreaded asynchronous client for interacting with W
 
 ## Installation
 
-To use this library, add the following to your `Cargo.toml`:
+To use this library, you can add it to your project using the following command:
+
+```bash
+cargo add --git https://github.com/elamribadrayour/wikipedia-client.git wikipedia-client
+```
+
+Alternatively, if you prefer to add it manually, include the following in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-wikipedia-client = { path = "path/to/your/library" }
-tokio = { version = "1", features = ["full"] }
-chrono = "0.4"
+wikipedia-client = { git = "https://github.com/elamribadrayour/wikipedia-client.git", version = "0.1.0" }
 ```
-
-Ensure you have the Tokio runtime and Chrono for date handling as dependencies.
 
 ## Usage
 
@@ -35,7 +37,7 @@ use wikipedia_client::search;
 
 #[tokio::main]
 async fn main() {
-    match search("Rust programming").await {
+    match search("Rust").await {
         Ok(results) => println!("Search results: {:?}", results),
         Err(e) => eprintln!("Error searching pages: {}", e),
     }
@@ -49,7 +51,7 @@ use wikipedia_client::get_content;
 
 #[tokio::main]
 async fn main() {
-    match get_content("Rust programming".to_string()).await {
+    match get_content("Rust".to_string()).await {
         Ok(contents) => println!("Page contents: {:?}", contents),
         Err(e) => eprintln!("Error retrieving page content: {}", e),
     }
@@ -63,7 +65,7 @@ use wikipedia_client::get_images;
 
 #[tokio::main]
 async fn main() {
-    match get_images("Rust programming").await {
+    match get_images("Rust").await {
         Ok(images) => println!("Page images: {:?}", images),
         Err(e) => eprintln!("Error retrieving images: {}", e),
     }
@@ -77,7 +79,7 @@ use wikipedia_client::get_categories;
 
 #[tokio::main]
 async fn main() {
-    match get_categories("Rust programming").await {
+    match get_categories("Rust").await {
         Ok(categories) => println!("Page categories: {:?}", categories),
         Err(e) => eprintln!("Error retrieving categories: {}", e),
     }
@@ -91,7 +93,7 @@ use wikipedia_client::get_links;
 
 #[tokio::main]
 async fn main() {
-    match get_links("Rust programming").await {
+    match get_links("Rust").await {
         Ok(links) => println!("Page links: {:?}", links),
         Err(e) => eprintln!("Error retrieving links: {}", e),
     }
@@ -105,7 +107,7 @@ use wikipedia_client::get_languages;
 
 #[tokio::main]
 async fn main() {
-    match get_languages("Rust programming").await {
+    match get_languages("Rust").await {
         Ok(languages) => println!("Page languages: {:?}", languages),
         Err(e) => eprintln!("Error retrieving languages: {}", e),
     }
@@ -120,7 +122,7 @@ use chrono::NaiveDate;
 
 #[tokio::main]
 async fn main() {
-    match get_views("Rust programming", "2023-01-01", 30).await {
+    match get_views("Rust", "2023-01-01", 30).await {
         Ok(views) => println!("Page views: {:?}", views),
         Err(e) => eprintln!("Error retrieving views: {}", e),
     }
@@ -133,4 +135,4 @@ Contributions to the library are welcome. Please submit a pull request or open a
 
 ## License
 
-This project is licensed under the MIT License. See the [license](license) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
