@@ -1,7 +1,7 @@
 use serde_json::Value;
 use std::error::Error;
 
-use crate::utils::{get_query, get_response};
+use crate::utils::{get_query, get_query_response};
 
 // Get the title of a Wikipedia image
 //
@@ -38,7 +38,7 @@ pub async fn get_images(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
         "https://en.wikipedia.org/w/api.php?action=query&prop=images&titles={}&format=json",
         get_query(query).await
     );
-    let output = get_response(&url).await?;
+    let output = get_query_response(&url).await?;
     let pages = output
         .get("pages")
         .unwrap()

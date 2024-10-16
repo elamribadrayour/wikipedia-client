@@ -1,6 +1,6 @@
 use std::{collections::HashMap, error::Error};
 
-use crate::utils::{get_query, get_response};
+use crate::utils::{get_query, get_query_response};
 
 // Get the categories of a Wikipedia page
 //
@@ -9,13 +9,13 @@ use crate::utils::{get_query, get_response};
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn search(query: &str) -> Result<Vec<HashMap<String, String>>, Box<dyn Error>> {
+pub async fn get_search(query: &str) -> Result<Vec<HashMap<String, String>>, Box<dyn Error>> {
     let url = format!(
         "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&format=json",
         get_query(query).await
     );
 
-    let response = get_response(&url).await?;
+    let response = get_query_response(&url).await?;
 
     let search_results = response
         .get("search")
@@ -78,7 +78,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_search() {
-        let output = search("Rust").await.unwrap();
+        let output = get_search("Rust").await.unwrap();
         assert!(output.len() > 0);
     }
 }

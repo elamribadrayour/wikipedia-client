@@ -1,3 +1,4 @@
+use chrono::NaiveDate;
 use std::collections::HashMap;
 use std::error::Error;
 
@@ -11,7 +12,7 @@ mod utils;
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
 pub async fn search(query: &str) -> Result<Vec<HashMap<String, String>>, Box<dyn Error>> {
-    utils::search(query).await
+    utils::get_search(query).await
 }
 
 // Get media files from a Wikipedia page
@@ -56,4 +57,19 @@ pub async fn get_links(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
 // * `Result<Value, Box<dyn Error>>` - The result of the search
 pub async fn get_languages(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
     utils::get_languages(query).await
+}
+
+// Get the views of a Wikipedia page
+//
+// # Arguments
+// * `query` - The search query
+//
+// # Returns
+// * `Result<Value, Box<dyn Error>>` - The result of the search
+pub async fn get_views(
+    query: &str,
+    start_date: &str,
+    nb_days: i64,
+) -> Result<HashMap<NaiveDate, i64>, Box<dyn Error>> {
+    utils::get_views(query, start_date, nb_days).await
 }
