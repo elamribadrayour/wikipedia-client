@@ -1,7 +1,7 @@
 use serde_json::Value;
 use std::error::Error;
 
-use crate::utils::{get_query, get_response};
+use crate::utils::{get_query, get_query_response};
 
 // Get the language of a Wikipedia page
 //
@@ -30,7 +30,7 @@ pub async fn get_languages(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
         "https://en.wikipedia.org/w/api.php?action=query&prop=langlinks&titles={}&format=json",
         get_query(query).await
     );
-    let output = get_response(&url).await?;
+    let output = get_query_response(&url).await?;
     let pages = output
         .get("pages")
         .unwrap()
