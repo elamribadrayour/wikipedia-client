@@ -15,6 +15,28 @@ pub async fn search(query: &str) -> Result<Vec<HashMap<String, String>>, Box<dyn
     utils::get_search(query).await
 }
 
+// Get page content from a Wikipedia page by title
+//
+// # Arguments
+// * `query` - The title of the page
+//
+// # Returns
+// * `Result<Value, Box<dyn Error>>` - The result of the search
+pub async fn get_page_by_title(query: &str) -> Result<HashMap<String, String>, Box<dyn Error>> {
+    utils::get_page(query, "title").await
+}
+
+// Get page content from a Wikipedia page by page id
+//
+// # Arguments
+// * `query` - The page id
+//
+// # Returns
+// * `Result<Value, Box<dyn Error>>` - The result of the search
+pub async fn get_page_by_id(query: &str) -> Result<HashMap<String, String>, Box<dyn Error>> {
+    utils::get_page(query, "pageId").await
+}
+
 // Get media files from a Wikipedia page
 //
 // # Arguments

@@ -37,7 +37,10 @@ pub async fn get_languages(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
         .as_object()
         .ok_or("no pages found")?;
     let item = pages.iter().next().ok_or("no item found")?;
-    let langlinks_obj: &Value = item.1.get("langlinks").ok_or("no langlinks found")?;
+    let langlinks_obj: &Value = item
+        .1
+        .get("langlinks")
+        .ok_or("no languages found for this specific page")?;
     let langlinks_array: &Vec<Value> = langlinks_obj
         .as_array()
         .ok_or("unable to parse langlinks object to array")?;
