@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.38"
+futures = "0.3.31"
 html2text = "0.13.0"
 reqwest = { version = "0.12.8", features = ["json"] }
 serde = { version = "1.0.210", features = ["derive"] }

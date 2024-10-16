@@ -8,7 +8,7 @@ pub async fn get_views(
     query: &str,
     start_date: &str,
     nb_days: i64,
-) -> Result<HashMap<NaiveDate, i64>, Box<dyn Error>> {
+) -> Result<HashMap<NaiveDate, i64>, Box<dyn Error + Send + Sync>> {
     let dt_start = NaiveDate::parse_from_str(start_date, "%Y%m%d")
         .expect("start_date argument should be in format YYYYMMDD");
     let end_date = (dt_start + Duration::days(nb_days - 1))

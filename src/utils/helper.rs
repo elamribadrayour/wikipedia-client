@@ -7,7 +7,7 @@ pub async fn get_query(query: &str) -> String {
     urlencoding::encode(&title).to_string()
 }
 
-pub async fn get_response(url: &str) -> Result<Value, Box<dyn Error>> {
+pub async fn get_response(url: &str) -> Result<Value, Box<dyn Error + Send + Sync>> {
     let client = reqwest::Client::new();
     let response = client.get(url).send().await?;
     if !response.status().is_success() {
@@ -20,7 +20,7 @@ pub async fn get_response(url: &str) -> Result<Value, Box<dyn Error>> {
     Ok(output)
 }
 
-pub async fn get_query_response(url: &str) -> Result<Value, Box<dyn Error>> {
+pub async fn get_query_response(url: &str) -> Result<Value, Box<dyn Error + Send + Sync>> {
     let response = get_response(url).await?;
     let query = response
         .get("query")

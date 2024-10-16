@@ -9,7 +9,9 @@ use crate::utils::{get_query, get_query_response};
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_search(query: &str) -> Result<Vec<HashMap<String, String>>, Box<dyn Error>> {
+pub async fn get_search(
+    query: &str,
+) -> Result<Vec<HashMap<String, String>>, Box<dyn Error + Send + Sync>> {
     let url = format!(
         "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={}&format=json",
         get_query(query).await
@@ -59,7 +61,7 @@ pub async fn get_search(query: &str) -> Result<Vec<HashMap<String, String>>, Box
                 ("pageid".to_string(), pageid),
             ]))
         })
-        .collect::<Result<Vec<HashMap<String, String>>, Box<dyn Error>>>()?;
+        .collect::<Result<Vec<HashMap<String, String>>, Box<dyn Error + Send + Sync>>>()?;
 
     Ok(output)
 }
