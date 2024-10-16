@@ -11,30 +11,27 @@ mod utils;
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn search(query: &str) -> Result<Vec<HashMap<String, String>>, Box<dyn Error>> {
+pub async fn search(
+    query: &str,
+) -> Result<Vec<HashMap<String, String>>, Box<dyn Error + Send + Sync>> {
     utils::get_search(query).await
 }
 
-// Get page content from a Wikipedia page by title
+// Get pages contents from a query
 //
 // # Arguments
-// * `query` - The title of the page
+// * `query` - The search query
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_page_by_title(query: &str) -> Result<HashMap<String, String>, Box<dyn Error>> {
-    utils::get_page(query, "title").await
-}
-
-// Get page content from a Wikipedia page by page id
-//
-// # Arguments
-// * `query` - The page id
-//
-// # Returns
-// * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_page_by_id(query: &str) -> Result<HashMap<String, String>, Box<dyn Error>> {
-    utils::get_page(query, "pageId").await
+pub async fn get_content(query: String) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
+    let results: Vec<HashMap<String, String>> = utils::get_search(&query).await?;
+    let page_ids: Vec<String> = results
+        .iter()
+        .filter_map(|x| x.get("pageid"))
+        .map(|x| x.to_string())
+        .collect();
+    utils::get_content(page_ids).await
 }
 
 // Get media files from a Wikipedia page
@@ -44,7 +41,7 @@ pub async fn get_page_by_id(query: &str) -> Result<HashMap<String, String>, Box<
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_images(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub async fn get_images(query: &str) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
     utils::get_images(query).await
 }
 
@@ -55,7 +52,7 @@ pub async fn get_images(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_categories(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub async fn get_categories(query: &str) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
     utils::get_categories(query).await
 }
 
@@ -66,7 +63,7 @@ pub async fn get_categories(query: &str) -> Result<Vec<String>, Box<dyn Error>> 
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_links(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub async fn get_links(query: &str) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
     utils::get_links(query).await
 }
 
@@ -77,7 +74,7 @@ pub async fn get_links(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_languages(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub async fn get_languages(query: &str) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
     utils::get_languages(query).await
 }
 
@@ -92,6 +89,6 @@ pub async fn get_views(
     query: &str,
     start_date: &str,
     nb_days: i64,
-) -> Result<HashMap<NaiveDate, i64>, Box<dyn Error>> {
+) -> Result<HashMap<NaiveDate, i64>, Box<dyn Error + Send + Sync>> {
     utils::get_views(query, start_date, nb_days).await
 }

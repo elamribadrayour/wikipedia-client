@@ -1,161 +1,136 @@
-# Wikipedia API Rust Library
+# Wikipedia Rust Client Library
 
-Welcome to the Wikipedia API Rust Library! This library provides an easy and efficient way to interact with Wikipedia's vast knowledge base using Rust. Whether you want to search for articles, retrieve page content, or analyze page statistics, this library has you covered.
+This library provides a multithreaded asynchronous client for interacting with Wikipedia's API, allowing you to search for pages, retrieve their content, and access various metadata like images, categories, links, languages, and view statistics.
 
 ## Features
 
-- **Search Wikipedia Articles**: Find pages related to a given search query.
-- **Retrieve Page Content**: Fetch detailed content from Wikipedia pages by title or page ID.
-- **Access Media Files**: Get a list of media files associated with a Wikipedia page.
-- **Explore Categories**: Discover the categories a Wikipedia page belongs to.
-- **Follow Links**: Retrieve all links present on a Wikipedia page.
-- **Language Support**: Get information about different language versions of a page.
-- **View Statistics**: Access the view count statistics for a page over a specified time period.
+- Search Wikipedia pages by query.
+- Retrieve detailed content of Wikipedia pages.
+- Fetch media files associated with Wikipedia pages.
+- Access categories and links related to Wikipedia pages.
+- Retrieve available languages for a Wikipedia page.
+- Get view statistics for a Wikipedia page over a specified period.
 
-## Getting Started
+## Installation
 
-### Prerequisites
-
-Ensure you have Rust installed on your system. If not, you can download and install it from [rust-lang.org](https://www.rust-lang.org/).
-
-### Installation
-
-Add the library to your `Cargo.toml`:
+To use this library, add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-wikipedia_api = "0.1.0"  # Replace with the actual version
+wikipedia-client = { path = "path/to/your/library" }
+tokio = { version = "1", features = ["full"] }
+chrono = "0.4"
 ```
 
-### Usage
+Ensure you have the Tokio runtime and Chrono for date handling as dependencies.
 
-Here is a quick start guide on how to use the library:
+## Usage
 
-#### Searching Articles
+Here's a quick guide on how to use the library functions. All functions are asynchronous and return results wrapped in a `Result` type, which you should handle appropriately.
+
+### 1. Search Pages
 
 ```rust
-use wikipedia_api::search;
+use wikipedia_client::search;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let query = "Rust programming";
-    let results = search(query).await?;
-    println!("{:?}", results);
-    Ok(())
+async fn main() {
+    match search("Rust programming").await {
+        Ok(results) => println!("Search results: {:?}", results),
+        Err(e) => eprintln!("Error searching pages: {}", e),
+    }
 }
 ```
 
-#### Fetching Page Content by Title
+### 2. Get Page Content
 
 ```rust
-use wikipedia_api::get_page_by_title;
+use wikipedia_client::get_content;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let title = "Rust (programming language)";
-    let page_content = get_page_by_title(title).await?;
-    println!("{:?}", page_content);
-    Ok(())
+async fn main() {
+    match get_content("Rust programming".to_string()).await {
+        Ok(contents) => println!("Page contents: {:?}", contents),
+        Err(e) => eprintln!("Error retrieving page content: {}", e),
+    }
 }
 ```
 
-#### Fetching Page Content by Page ID
+### 3. Get Images from a Page
 
 ```rust
-use wikipedia_api::get_page_by_id;
+use wikipedia_client::get_images;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let page_id = "123456";
-    let page_content = get_page_by_id(page_id).await?;
-    println!("{:?}", page_content);
-    Ok(())
+async fn main() {
+    match get_images("Rust programming").await {
+        Ok(images) => println!("Page images: {:?}", images),
+        Err(e) => eprintln!("Error retrieving images: {}", e),
+    }
 }
 ```
 
-#### Fetching Media Files
+### 4. Get Categories
 
 ```rust
-use wikipedia_api::get_images;
+use wikipedia_client::get_categories;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let query = "Rust programming";
-    let images = get_images(query).await?;
-    println!("{:?}", images);
-    Ok(())
+async fn main() {
+    match get_categories("Rust programming").await {
+        Ok(categories) => println!("Page categories: {:?}", categories),
+        Err(e) => eprintln!("Error retrieving categories: {}", e),
+    }
 }
 ```
 
-#### Fetching Categories
+### 5. Get Links
 
 ```rust
-use wikipedia_api::get_categories;
+use wikipedia_client::get_links;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let query = "Rust programming";
-    let categories = get_categories(query).await?;
-    println!("{:?}", categories);
-    Ok(())
+async fn main() {
+    match get_links("Rust programming").await {
+        Ok(links) => println!("Page links: {:?}", links),
+        Err(e) => eprintln!("Error retrieving links: {}", e),
+    }
 }
 ```
 
-#### Fetching Links
+### 6. Get Languages
 
 ```rust
-use wikipedia_api::get_links;
+use wikipedia_client::get_languages;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let query = "Rust programming";
-    let links = get_links(query).await?;
-    println!("{:?}", links);
-    Ok(())
+async fn main() {
+    match get_languages("Rust programming").await {
+        Ok(languages) => println!("Page languages: {:?}", languages),
+        Err(e) => eprintln!("Error retrieving languages: {}", e),
+    }
 }
 ```
 
-#### Fetching Languages
+### 7. Get Views
 
 ```rust
-use wikipedia_api::get_languages;
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let query = "Rust programming";
-    let languages = get_languages(query).await?;
-    println!("{:?}", languages);
-    Ok(())
-}
-```
-
-#### Fetching View Statistics
-
-```rust
+use wikipedia_client::get_views;
 use chrono::NaiveDate;
-use wikipedia_api::get_views;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let query = "Rust programming";
-    let start_date = "2023-01-01";
-    let nb_days = 30;
-    let views = get_views(query, start_date, nb_days).await?;
-    println!("{:?}", views);
-    Ok(())
+async fn main() {
+    match get_views("Rust programming", "2023-01-01", 30).await {
+        Ok(views) => println!("Page views: {:?}", views),
+        Err(e) => eprintln!("Error retrieving views: {}", e),
+    }
 }
 ```
 
 ## Contributing
 
-We welcome contributions! Please feel free to submit pull requests or report issues.
+Contributions to the library are welcome. Please submit a pull request or open an issue for any bugs or feature requests.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Thanks to the Wikipedia community for their incredible work and the API that makes this library possible.
-
-Enjoy exploring the world of Wikipedia through Rust!
+This project is licensed under the MIT License. See the [license](license) file for details.

@@ -33,7 +33,7 @@ fn get_title(value: &Value) -> Option<String> {
 //
 // # Returns
 // * `Result<Value, Box<dyn Error>>` - The result of the search
-pub async fn get_categories(query: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub async fn get_categories(query: &str) -> Result<Vec<String>, Box<dyn Error + Send + Sync>> {
     let url = format!(
         "https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles={}&format=json",
         get_query(query).await
