@@ -1,51 +1,161 @@
-# Wikipedia API:
+# Wikipedia API Rust Library
 
-1. **Search for Pages:**
-   - Find pages related to a keyword or topic.
-   - Example API call: `action=query&list=search&srsearch={query}`.
-   - Useful for looking up articles, and retrieving page titles, page IDs, and snippets.
+Welcome to the Wikipedia API Rust Library! This library provides an easy and efficient way to interact with Wikipedia's vast knowledge base using Rust. Whether you want to search for articles, retrieve page content, or analyze page statistics, this library has you covered.
 
-2. **Retrieve Page Content:**
-   - Get the full content of a Wikipedia page in plain text or HTML.
-   - Example API call: `action=query&prop=extracts&titles={title}`.
-   - Useful for getting introductory sections or summaries of an article.
+## Features
 
-3. **Get Page Metadata:**
-   - Fetch metadata about a specific page (such as page revisions, contributors, and categories).
-   - Example API call: `action=query&prop=info&titles={title}`.
-   - Useful for knowing when a page was last updated or its contributors.
+- **Search Wikipedia Articles**: Find pages related to a given search query.
+- **Retrieve Page Content**: Fetch detailed content from Wikipedia pages by title or page ID.
+- **Access Media Files**: Get a list of media files associated with a Wikipedia page.
+- **Explore Categories**: Discover the categories a Wikipedia page belongs to.
+- **Follow Links**: Retrieve all links present on a Wikipedia page.
+- **Language Support**: Get information about different language versions of a page.
+- **View Statistics**: Access the view count statistics for a page over a specified time period.
 
-4. **Retrieve Media Files:**
-   - Fetch images or other media files attached to a page.
-   - Example API call: `action=query&prop=images&titles={title}`.
-   - Useful for retrieving media or files associated with a specific article.
+## Getting Started
 
-5. **Search Categories:**
-   - Retrieve the categories a specific page belongs to.
-   - Example API call: `action=query&prop=categories&titles={title}`.
-   - Useful for understanding the classification of an article within Wikipedia's hierarchy.
+### Prerequisites
 
-6. **Page Links:**
-   - Get all internal links on a page.
-   - Example API call: `action=query&prop=links&titles={title}`.
-   - Useful for exploring related topics or navigating through Wikipedia pages programmatically.
+Ensure you have Rust installed on your system. If not, you can download and install it from [rust-lang.org](https://www.rust-lang.org/).
 
-7. **Fetch Revisions:**
-   - Retrieve the revision history of a page.
-   - Example API call: `action=query&prop=revisions&titles={title}`.
-   - Useful for understanding changes made over time to an article.
+### Installation
 
-8. **Random Pages:**
-   - Get a random Wikipedia page.
-   - Example API call: `action=query&list=random&rnlimit=1`.
-   - Useful for discovering random articles.
+Add the library to your `Cargo.toml`:
 
-9. **Get Languages:**
-   - Retrieve the available languages for a specific page.
-   - Example API call: `action=query&prop=langlinks&titles={title}`.
-   - Useful for finding language translations of a specific page.
+```toml
+[dependencies]
+wikipedia_api = "0.1.0"  # Replace with the actual version
+```
 
-10. **Get Page Views:**
-    - Retrieve the page view statistics for a given article.
-    - Example API call: `action=query&prop=pageviews&titles={title}`.
-    - Useful for tracking popularity or trends of an article over time.
+### Usage
+
+Here is a quick start guide on how to use the library:
+
+#### Searching Articles
+
+```rust
+use wikipedia_api::search;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let query = "Rust programming";
+    let results = search(query).await?;
+    println!("{:?}", results);
+    Ok(())
+}
+```
+
+#### Fetching Page Content by Title
+
+```rust
+use wikipedia_api::get_page_by_title;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let title = "Rust (programming language)";
+    let page_content = get_page_by_title(title).await?;
+    println!("{:?}", page_content);
+    Ok(())
+}
+```
+
+#### Fetching Page Content by Page ID
+
+```rust
+use wikipedia_api::get_page_by_id;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let page_id = "123456";
+    let page_content = get_page_by_id(page_id).await?;
+    println!("{:?}", page_content);
+    Ok(())
+}
+```
+
+#### Fetching Media Files
+
+```rust
+use wikipedia_api::get_images;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let query = "Rust programming";
+    let images = get_images(query).await?;
+    println!("{:?}", images);
+    Ok(())
+}
+```
+
+#### Fetching Categories
+
+```rust
+use wikipedia_api::get_categories;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let query = "Rust programming";
+    let categories = get_categories(query).await?;
+    println!("{:?}", categories);
+    Ok(())
+}
+```
+
+#### Fetching Links
+
+```rust
+use wikipedia_api::get_links;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let query = "Rust programming";
+    let links = get_links(query).await?;
+    println!("{:?}", links);
+    Ok(())
+}
+```
+
+#### Fetching Languages
+
+```rust
+use wikipedia_api::get_languages;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let query = "Rust programming";
+    let languages = get_languages(query).await?;
+    println!("{:?}", languages);
+    Ok(())
+}
+```
+
+#### Fetching View Statistics
+
+```rust
+use chrono::NaiveDate;
+use wikipedia_api::get_views;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let query = "Rust programming";
+    let start_date = "2023-01-01";
+    let nb_days = 30;
+    let views = get_views(query, start_date, nb_days).await?;
+    println!("{:?}", views);
+    Ok(())
+}
+```
+
+## Contributing
+
+We welcome contributions! Please feel free to submit pull requests or report issues.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Thanks to the Wikipedia community for their incredible work and the API that makes this library possible.
+
+Enjoy exploring the world of Wikipedia through Rust!
